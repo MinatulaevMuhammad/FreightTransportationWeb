@@ -1,0 +1,63 @@
+﻿@model Order
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<html>
+<head>
+    <title>Детальное описание заказа</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Детальное описание заказа</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Информация о заказчике</h2>
+                <div class="form-group">
+                    <label for="firstName">Имя:</label>
+                    <p id="firstName">@Model.Customer.UserName</p>
+                </div>
+                <div class="form-group">
+                    <label for="address">Адрес проживания:</label>
+                    <p id="address">Дом - @Model.Customer.Address.House</p>
+                    <p id="address">Улица - @Model.Customer.Address.Street</p>
+                    <p id="address">Город - @Model.Customer.Address.City</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h2>Информация о доставке</h2>
+                <div class="form-group">
+                    <label for="deliveryAddress">Место доставки:</label>
+                    <p id="deliveryAddress">Дом - @Model.DeliveryAddress.House</p>
+                    <p id="deliveryAddress">Улица - @Model.DeliveryAddress.Street</p>
+                    <p id="deliveryAddress">Город - @Model.DeliveryAddress.City</p>
+                </div>
+                <div class="form-group">
+                    <label for="deliveryAddress">Контактный номер:</label>
+                    <p id="deliveryAddress">@Model.DeliveryAddress.PhoneNumber</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Информация о грузе</h2>
+                <div class="form-group">
+                    <label for="cargoDescription">Описание груза:</label>
+                    <p id="cargoDescription">@Model.Package.Description</p>
+                </div>
+                <div class="form-group">
+                    <label for="cargoWeight">Вес груза:</label>
+                    <p id="cargoWeight">@Model.Package.Weight</p>
+                </div>
+                <div class="form-group">
+                    <label for="cargoDimensions">Габариты груза:</label>
+                    <p id="cargoDimensions">@Model.Package.Length - @Model.Package.Width - @Model.Package.Height (длина-ширина-высота в см)</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

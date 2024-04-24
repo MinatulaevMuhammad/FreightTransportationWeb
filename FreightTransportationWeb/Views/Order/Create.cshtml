@@ -1,0 +1,60 @@
+﻿@model Order
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<form method="post" asp-action="Create">
+    <label>Адрес доставки</label>
+    <div class="form-group">
+        <label asp-for="DeliveryAddress.House">Дом</label>
+        <input asp-for="DeliveryAddress.House" class="form-control" placeholder="House">
+        <span asp-validation-for="DeliveryAddress.House" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DeliveryAddress.Street">Улица</label>
+        <input asp-for="DeliveryAddress.Street" class="form-control" placeholder="Street">
+        <span asp-validation-for="DeliveryAddress.Street" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DeliveryAddress.City">Город</label>
+        <input asp-for="DeliveryAddress.City" class="form-control" placeholder="City">
+        <span asp-validation-for="DeliveryAddress.City" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DeliveryAddress.PhoneNumber">Контактный номер</label>
+        <input asp-for="DeliveryAddress.PhoneNumber" class="form-control" placeholder="PhoneNumber">
+        <span asp-validation-for="DeliveryAddress.PhoneNumber" class="text-danger"></span>
+    </div>
+    <br><label>О посылке</label>
+    <div class="row g-4">
+        <div class="col-sm">
+            <label asp-for="Package.Weight">Вес</label>
+            <input asp-for="Package.Weight" class="form-control" placeholder="Weight">
+            <span asp-validation-for="Package.Weight" class="text-danger"></span>
+        </div>
+        <div class="col-sm">
+            <label asp-for="Package.Length">Длина</label>
+            <input asp-for="Package.Length" class="form-control" placeholder="Length">
+            <span asp-validation-for="Package.Length" class="text-danger"></span>
+        </div>
+        <div class="col-sm">
+            <label asp-for="Package.Width">Ширина</label>
+            <input asp-for="Package.Width" class="form-control" placeholder="Width">
+            <span asp-validation-for="Package.Width" class="text-danger"></span>
+        </div>
+        <div class="col-sm">
+            <label asp-for="Package.Height">Высота</label>
+            <input asp-for="Package.Height" class="form-control" placeholder="Height">
+            <span asp-validation-for="Package.Height" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Package.Description">Описание посылки</label>
+        <textarea asp-for="Package.Description" class="form-control" placeholder="Description" rows="3"></textarea>
+        <span asp-validation-for="Package.Description" class="text-danger"></span>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
