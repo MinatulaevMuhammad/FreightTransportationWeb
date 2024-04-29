@@ -18,14 +18,17 @@ namespace FreightTransportationWeb.Repository
             _context.Add(order);
             return Save();
         }
-        public bool Delete(Order order)
+        public bool Delete(Order order, DeliveryAddress deliveryAddress, Package package)
         {
             _context.Remove(order);
+            _context.Remove(deliveryAddress);
+            _context.Remove(package);
             return Save();
         }
         public async Task<IEnumerable<Order>> GetAll()
         {
-            return await _context.Orders.Include(c =>c.Package)
+            return await _context.Orders.Include(c => c.Package)
+                                        .Include(d => d.DeliveryAddress)
                                         .Include(c => c.Customer.Address)
                                         .ToListAsync();
         }

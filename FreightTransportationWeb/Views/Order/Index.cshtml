@@ -1,28 +1,55 @@
-﻿@model IEnumerable<Order>
+﻿@using FreightTransportationWeb.Data.Enum
+@model IEnumerable<Order>
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
-@{
-}
 <div class="album py-5 bg-light">
     <div class="container">
         <div class="col">
+            <form method="get" action="">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="departureCity">Выберите город отправки:</label>
+                        <input type="text" class="form-control" id="departureCity" name="departureCity" placeholder="Введите город отправки">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="deliveryCity">Выберите город доставки:</label>
+                        <input type="text" class="form-control" id="deliveryCity" name="deliveryCity" placeholder="Введите город доставки">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Применить фильтр</button>
+            </form>
+
             @foreach (var item in Model)
             {
-                <div class="col-sm">
-                    <div class="card mb-4 box-shadow">
-                        <div class="card-body">
-                            <p class="card-text">@item.Package.Description</p>
-                            <p class="card-text">@item.Customer.Address.City</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <a type="btn btn-success" asp-controller = "Order" asp-action = "Detail" asp-route-id = "@item.Id"  class="btn btn-sm btn-outline-secondary">View</a>
-                                    <a type="btn btn-success" asp-controller="Order" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                if (item.OrderStatus == OrderStatus.Created && item.Customer.Id != User.GetUserId() &&
+                (string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["departureCity"]) ||
+                item.Customer.Address.City.Contains(HttpContextAccessor.HttpContext.Request.Query["departureCity"])) &&
+                (string.IsNullOrEmpty(HttpContextAccessor.HttpContext.Request.Query["deliveryCity"]) ||
+                item.DeliveryAddress.City.Contains(HttpContextAccessor.HttpContext.Request.Query["deliveryCity"])))
+                {
+                    <div class="col-sm">
+                        <div class="card mb-4 box-shadow">
+                            <div class="card-body">
+                                <p class="card-text">@item.Package.Description</p>
+                                <p class="card-text">Отправка из: @item.Customer.Address.City</p>
+                                <p class="card-text">Доставка в: @item.DeliveryAddress.City</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <a type="btn btn-success" asp-controller="Order" asp-action="Detail" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">View</a>
+                                        <a type="btn btn-success" style="background-color: lawngreen" asp-controller="Order" asp-action="AcceptOrder" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Принять заказ</a>
+                                        @if (User.Identity.IsAuthenticated && User.IsInRole("admin"))
+                                        {
+                                            <a type="btn btn-success" asp-controller="Order" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                                            <a type="btn btn-success" asp-controller="Order" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-outline-secondary">Delete</a>
+                                        }
+                                    </div>
+                                    <small class="text-muted">Габариты груза: @item.Package.Width / @item.Package.Height / @item.Package.Length</small>
+                                    <small class="text-muted">Вес груза: @item.Package.Weight</small>
                                 </div>
-                                <small class="text-muted">Габариты груза: @item.Package.Width / @item.Package.Height / @item.Package.Length</small>
-                                <small class="text-muted">Вес груза: @item.Package.Weight </small>
                             </div>
                         </div>
                     </div>
-                </div>
+                }
             }
         </div>
     </div>

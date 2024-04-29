@@ -1,0 +1,27 @@
+﻿@using FreightTransportationWeb.ViewModels
+@model EditUserDashboardViewModel
+
+<form method="post" asp-action="EditUserProfile" enctype="multipart/form-data">
+	<input type="hidden" id="Id" name="Id" asp-for="Id" />
+	<div class="form-group">
+		<label asp-for="UserName">UserName</label>
+		<input asp-for="UserName" class="form-control" placeholder="UserName" />
+		<span asp-validation-for="UserName" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="AddressUser.House">House</label>
+		<input asp-for="AddressUser.House" class="form-control" placeholder="AddressUser.House" />
+		<span asp-validation-for="AddressUser.House" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="AddressUser.Street">Street</label>
+		<input asp-for="AddressUser.Street" class="form-control" placeholder="AddressUser.Street" />
+		<span asp-validation-for="AddressUser.Street" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="AddressUser.City">City</label>
+		<input asp-for="AddressUser.City" class="form-control" placeholder="AddressUser.City" />
+		<span asp-validation-for="AddressUser.City" class="text-danger"></span>
+	</div>
+	<button type="submit" class="btn btn-primary">Submit</button>
+</form>

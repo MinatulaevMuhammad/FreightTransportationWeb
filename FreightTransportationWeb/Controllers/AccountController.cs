@@ -48,5 +48,45 @@ namespace FreightTransportationWeb.Controllers
             TempData["Error"] = "Данный пользователь не обнаружен. Пожалуйста, попробуйте снова!";
             return View(loginViewModel);
         }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            var repsonse = new RegisterViewModel();
+            return View(repsonse);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel registerViewModel)
+        {
+            if (!ModelState.IsValid) return View(registerViewModel);
+
+            var user = await _userManager.FindByEmailAsync(registerViewModel.EmailAddress);
+            if (user != null)
+            {
+                TempData["Error"] = "This email address is already in use";
+                return View(registerViewModel);
+            }
+
+            var newUser = new AppUser()
+            {
+                Email = registerViewModel.EmailAddress,
+                UserName = registerViewModel.EmailAddress,
+                Address = registerViewModel.AddressUser
+            };
+            var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
+
+            if(newUserResponse.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(newUser, UserRoles.User);
+            }
+            return RedirectToAction("Login", "Account");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Login", "Account");
+        }
     }
 }

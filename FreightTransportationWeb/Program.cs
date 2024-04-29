@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IDashboardRepository, DashboardRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
@@ -26,7 +28,6 @@ var app = builder.Build();
 if(args.Length ==1 && args[0].ToLower() == "seeddate")
 {
     await Seed.SeedUsersAndRolesAsync(app);
-    //Seed.SeedData(app);
 }
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -40,11 +41,11 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Account}/{action=Login}/{id?}");
 
 app.Run();

@@ -1,5 +1,6 @@
-﻿@using FreightTransportationWeb.ViewModels
-@model OrderViewModel
+﻿@model Order
+
+<h1>Вы действительно хотите удалить данный заказ?</h1>
 
 <form method="post" asp-action="Edit" enctype="multipart/form-data">
     <input type="hidden" value="AddressId" id="AddressId" />
@@ -52,6 +53,10 @@
         <textarea asp-for="Package.Description" class="form-control" placeholder="Description" rows="3"></textarea>
         <span asp-validation-for="Package.Description" class="text-danger"></span>
     </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
+<div class="form-group">
+    <form action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Confirm" class="btn btn-danger float-right mt-3" /> 
+    </form>
+</div>

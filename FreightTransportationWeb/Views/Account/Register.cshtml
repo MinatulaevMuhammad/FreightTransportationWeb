@@ -1,0 +1,67 @@
+﻿@using FreightTransportationWeb.ViewModels
+@model RegisterViewModel
+
+@{
+	ViewData["Title"] = "Sign up";
+}
+
+<div class="row">
+    <div class="col-md-6 offset-3">
+        <p>
+            <h4>Sign up for a new account</h4>
+        </p>
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="col-md-12 alert alert-danger">
+                <span><b>Sorry!</b> - @TempData["Error"] </span>
+            </div>
+        }
+
+        <div class="row">
+            <div class="col-md-8">
+                <form asp-action="Register">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <div class="form-group">
+                        <label asp-for="EmailAddress" class="control-label"></label>
+                        <input asp-for="EmailAddress" class="form-control" />
+                        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Password" class="control-label"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword" class="control-label"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <label>Адрес доставки</label>
+                    <div class="form-group">
+                        <label asp-for="AddressUser.House">Дом</label>
+                        <input asp-for="AddressUser.House" class="form-control" placeholder="House">
+                        <span asp-validation-for="AddressUser.House" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressUser.Street">Улица</label>
+                        <input asp-for="AddressUser.Street" class="form-control" placeholder="Street">
+                        <span asp-validation-for="AddressUser.Street" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="AddressUser.City">Город</label>
+                        <input asp-for="AddressUser.City" class="form-control" placeholder="City">
+                        <span asp-validation-for="AddressUser.City" class="text-danger"></span>
+                    </div>
+                   
+                    <div class="form-group">
+                        <input class="btn btn-outline-success float-right" type="submit" value="Sign up" />
+                        <a class="btn btn-outline-secondary" asp-controller="Account" asp-action="Login">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

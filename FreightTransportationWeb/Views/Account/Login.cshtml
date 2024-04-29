@@ -2,8 +2,9 @@
 @model LoginViewModel
 
 @{
-	ViewData["Title"] = "Login";
+    ViewData["Title"] = "Login";
 }
+
 <div class="row">
     <div class="col-md-6 offset-3">
         <p>
@@ -16,7 +17,7 @@
             </div>
         }
         <div class="row">
-            <div class="col-md-8 offset-2">
+            <div class="col-md-8">
                 <form asp-action="Login">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     <div class="form-group">
@@ -30,10 +31,15 @@
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <input class="btn btn-outline-success float right" type="submit" value="Log in" />
+                        <input class="btn btn-outline-success float-right" type="submit" value="Log in" />
                         <a class="btn btn-outline-secondary" asp-controller="Order" asp-action="Index">Cancel</a>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8 offset-3">
+                <p>Don't have an account? <a asp-action="Register" asp-controller="Account">Register here</a>.</p>
             </div>
         </div>
     </div>

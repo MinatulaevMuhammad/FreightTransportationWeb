@@ -102,9 +102,6 @@ namespace FreightTransportationWeb.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<int>("UserRole")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
@@ -118,6 +115,37 @@ namespace FreightTransportationWeb.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("FreightTransportationWeb.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AppUserCommentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comments")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("PublishedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("FreightTransportationWeb.Models.DeliveryAddress", b =>
@@ -357,6 +385,13 @@ namespace FreightTransportationWeb.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("FreightTransportationWeb.Models.Comment", b =>
+                {
+                    b.HasOne("FreightTransportationWeb.Models.AppUser", null)
+                        .WithMany("Comments")
+                        .HasForeignKey("AppUserId");
+                });
+
             modelBuilder.Entity("FreightTransportationWeb.Models.Order", b =>
                 {
                     b.HasOne("FreightTransportationWeb.Models.AppUser", "Contractor")
@@ -437,6 +472,11 @@ namespace FreightTransportationWeb.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("FreightTransportationWeb.Models.AppUser", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

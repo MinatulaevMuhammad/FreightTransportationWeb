@@ -11,10 +11,14 @@ namespace FreightTransportationWeb.Controllers
     public class OrderController : Controller
     {
         private readonly IOrderRepository _orderRepository;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserRepository _userRepository;
 
-        public OrderController(IOrderRepository orderRepository)
+        public OrderController(IOrderRepository orderRepository, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
         {
             _orderRepository = orderRepository;
+            _httpContextAccessor = httpContextAccessor;
+            _userRepository = userRepository;
         }
         public async Task<IActionResult> Index()
         {
@@ -30,7 +34,9 @@ namespace FreightTransportationWeb.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            var curUserId = _httpContextAccessor.HttpContext.User.GetUserId();
+            var createOrderViewModel = new OrderViewModel { CustomerId = curUserId};
+            return View(createOrderViewModel);
         }
         [HttpPost]
         public async Task<IActionResult> Create(Order orderVM)
@@ -39,17 +45,7 @@ namespace FreightTransportationWeb.Controllers
             {
                 var order = new Order
                 {
-                    Customer = new AppUser
-                    {
-                        UserName = "Jhon",
-                        UserRole = UserRole.Customer,
-                        Address = new AddressUser
-                        {
-                            House = "5",
-                            Street = "SDASd",
-                            City = "sdgds"
-                        }
-                    },
+                    CustomerId = orderVM.CustomerId,
                     DeliveryAddress = new DeliveryAddress
                     {
                         House = orderVM.DeliveryAddress.House,
@@ -132,5 +128,50 @@ namespace FreightTransportationWeb.Controllers
                 return View(orderVM);
             }
         }
+
+		[HttpGet]
+		public async Task<IActionResult> Delete(int id)
+        {
+            var orderDetails = await _orderRepository.GetByIdAsync(id);
+            if(orderDetails == null) return View("Error");
+            return View(orderDetails);
+        }
+		[HttpPost,ActionName("Delete")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var orderDetail = await _orderRepository.GetByIdAsync(id);
+            if( orderDetail == null) return View("Error");
+            var deliveryAdress = orderDetail.DeliveryAddress;
+            var package = orderDetail.Package;
+            if (deliveryAdress == null || package == null) return View("Error");
+            _orderRepository.Delete(orderDetail, deliveryAdress, package);
+            return RedirectToAction("Index");
+
+		}
+
+        [HttpGet]
+        public async Task<IActionResult> AcceptOrder(int id)
+        {
+            Order order = await _orderRepository.GetByIdAsync(id);
+            var userId =  _httpContextAccessor.HttpContext.User.GetUserId();
+            var user = await _userRepository.GetUserById(userId);
+            if (order == null || userId == null || user == null) return View("Error");
+
+            order.ContractorId = userId;
+            order.OrderStatus = OrderStatus.InProgress;
+            _orderRepository.Update(order);
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Complete(int id)
+        {
+            Order order = await _orderRepository.GetByIdAsync(id);
+            if (order == null ) return View("Error");
+
+            order.OrderStatus = OrderStatus.Finished;
+            _orderRepository.Update(order);
+            return RedirectToAction("Create", "Comment", new {id = order.ContractorId});
+        }
+
     }
 }

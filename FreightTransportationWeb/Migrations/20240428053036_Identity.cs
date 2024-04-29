@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FreightTransportationWeb.Migrations
 {
     /// <inheritdoc />
-    public partial class Indatity : Migration
+    public partial class Identity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -78,7 +78,6 @@ namespace FreightTransportationWeb.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserRole = table.Column<int>(type: "int", nullable: false),
                     AddressId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -213,6 +212,28 @@ namespace FreightTransportationWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Comments = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublishedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AppUserCommentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_AspNetUsers_AppUserId",
+                        column: x => x.AppUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Orders",
                 columns: table => new
                 {
@@ -296,6 +317,11 @@ namespace FreightTransportationWeb.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Comments_AppUserId",
+                table: "Comments",
+                column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Orders_ContractorId",
                 table: "Orders",
                 column: "ContractorId");
@@ -333,6 +359,9 @@ namespace FreightTransportationWeb.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Comments");
 
             migrationBuilder.DropTable(
                 name: "Orders");

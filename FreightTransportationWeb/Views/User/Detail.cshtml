@@ -1,0 +1,27 @@
+﻿@using FreightTransportationWeb.ViewModels
+@model UserDetailViewModel
+
+<html>
+<head>
+    <title>Детальное описание заказа</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Информация о заказчике</h2>
+                <div class="form-group">
+                    <label for="firstName">Имя:</label>
+                    <p id="firstName">@Model.UserName</p>
+                </div>
+                <div class="form-group">
+                    <label for="address">Адрес проживания:</label>
+                    <p id="address">Дом - @Model.AddressUser.House</p>
+                    <p id="address">Улица - @Model.AddressUser.Street</p>
+                    <p id="address">Город - @Model.AddressUser.City</p>
+                </div>
+            </div>
+    </div>
+</body>
+</html>

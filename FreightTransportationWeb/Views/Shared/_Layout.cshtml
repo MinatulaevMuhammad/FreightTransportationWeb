@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/FreightTransportationWeb.styles.css" asp-append-version="true" />
+
+	<link href="~/lib/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
+	<link href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -22,12 +25,38 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Index">Customers</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Order" asp-action="Index">Orders</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
-                        </li>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item" >
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="AcceptedOrders">Accepted orders</a>
+                            </li>
+                            <li class="nav-item" style="position:absolute;right:235px">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Your orders</a>
+                            </li>
+                            <li class="nav-item" style="position:absolute;right:100px">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="EditUserProfile">Edit user profile</a>
+                            </li>
+                            <li class="nav-item" style="position:absolute;right:10px">
+                                <form asp-area="" asp-controller="Account" asp-action="Logout">
+                                    <button class="btn btn-outline-danger">Logout</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item" style="position:absolute;right:10px">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

@@ -10,7 +10,7 @@ namespace FreightTransportationWeb.Interfaces
         Task<IEnumerable<Order>> GetOrderByCity(string city);
         bool Add(Order order);
         bool Update(Order order);
-        bool Delete(Order order);
+        bool Delete(Order order, DeliveryAddress deliveryAddress, Package package);
         bool Save();
     }
 }

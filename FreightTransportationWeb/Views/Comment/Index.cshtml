@@ -1,0 +1,7 @@
+﻿@model IEnumerable<FreightTransportationWeb.Models.Comment>
+
+<h2>Show comments</h2>
+@foreach (var item in Model)
+{
+	@Html.Partial("_CommentPartial", item)
+}
