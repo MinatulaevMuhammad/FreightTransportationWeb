@@ -38,7 +38,8 @@ namespace FreightTransportationWeb.Controllers
             {
                 Id = user.Id,
                 UserName = user.UserName,
-                AddressUser = user.Address
+                AddressUser = user.Address,
+                Image = user.Image
             };
 
             return View(userDetailViewModel);

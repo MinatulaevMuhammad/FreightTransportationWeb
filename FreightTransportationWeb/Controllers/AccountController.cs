@@ -1,6 +1,7 @@
 ﻿using FreightTransportationWeb.Data;
 using FreightTransportationWeb.Models;
 using FreightTransportationWeb.ViewModels;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,11 +12,13 @@ namespace FreightTransportationWeb.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ApplicationDbContext _context;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,ApplicationDbContext context)
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _userManager=userManager;
             _signInManager=signInManager;
             _context=context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -67,12 +70,26 @@ namespace FreightTransportationWeb.Controllers
                 return View(registerViewModel);
             }
 
+            string uniqueFileName = null;
+            if (registerViewModel.Image != null)
+            {
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + registerViewModel.Image.FileName;
+                string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await registerViewModel.Image.CopyToAsync(fileStream);
+                }
+            }
+
             var newUser = new AppUser()
             {
                 Email = registerViewModel.EmailAddress,
-                UserName = registerViewModel.EmailAddress,
-                Address = registerViewModel.AddressUser
+                UserName = registerViewModel.UserName,
+                Address = registerViewModel.AddressUser,
+                Image = uniqueFileName,
+                PhoneNumber = registerViewModel.PhoneNumber
             };
+
             var newUserResponse = await _userManager.CreateAsync(newUser, registerViewModel.Password);
 
             if(newUserResponse.Succeeded)

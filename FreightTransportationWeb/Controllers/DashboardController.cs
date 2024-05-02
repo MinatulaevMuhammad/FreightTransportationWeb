@@ -2,6 +2,8 @@
 using FreightTransportationWeb.Interfaces;
 using FreightTransportationWeb.Models;
 using FreightTransportationWeb.ViewModels;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FreightTransportationWeb.Controllers
@@ -10,14 +12,34 @@ namespace FreightTransportationWeb.Controllers
     {
         private readonly IDashboardRepository _dashboardRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DashboardController(IDashboardRepository dashboardRepository, IHttpContextAccessor httpContextAccessor)
+        public DashboardController(IDashboardRepository dashboardRepository, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment)
         {
             _dashboardRepository = dashboardRepository;
             _httpContextAccessor = httpContextAccessor;
+            _webHostEnvironment = webHostEnvironment;
         }
-        public void UserEdit(AppUser appUser, EditUserDashboardViewModel editVM)
+        public async void UserEdit(AppUser appUser, EditUserDashboardViewModel editVM)
         {
+            if (editVM.Image != null)
+            {
+                string oldPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", appUser.Image);
+
+                if (System.IO.File.Exists(oldPhotoPath))
+                {
+                    System.IO.File.Delete(oldPhotoPath);
+                }
+
+                string newUniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(editVM.Image.FileName);
+                string newFilePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", newUniqueFileName);
+                using (var fileStream = new FileStream(newFilePath, FileMode.Create))
+                {
+                    await editVM.Image.CopyToAsync(fileStream);
+                }
+
+                appUser.Image = newUniqueFileName;
+            }
             appUser.Id = editVM.Id;
             appUser.Address = editVM.AddressUser;
         }
@@ -44,7 +66,8 @@ namespace FreightTransportationWeb.Controllers
             {
                 Id = curUserId,
                 UserName = user.UserName,
-                AddressUser = user.Address
+                AddressUser = user.Address,
+                SaveImage = user.Image
             };
             return View(editUserViewModel);
         }

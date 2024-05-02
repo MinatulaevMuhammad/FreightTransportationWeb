@@ -1,5 +1,6 @@
 ﻿using FreightTransportationWeb.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FreightTransportationWeb.ViewModels
 {
@@ -16,6 +17,9 @@ namespace FreightTransportationWeb.ViewModels
         [DataType(DataType.Password)]
         [Compare("Password",ErrorMessage ="Password do not match")]
         public string ConfirmPassword { get; set; }
+        public string UserName {  get; set; }
+        public IFormFile? Image {  get; set; } 
+        public string? PhoneNumber {  get; set; } 
         public int AddressUserId { get; set; }
         public AddressUser AddressUser { get; set; }
     }

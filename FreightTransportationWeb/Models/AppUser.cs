@@ -10,6 +10,7 @@ namespace FreightTransportationWeb.Models
         [ForeignKey ("AddressUser")]
         public int AddressId { get; set; }
         public AddressUser Address { get; set; }
+        public string? Image {  get; set; }
         public ICollection<Comment> Comments { get; set; }
     }
 }

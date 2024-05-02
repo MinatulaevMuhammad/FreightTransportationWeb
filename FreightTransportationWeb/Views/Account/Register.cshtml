@@ -2,7 +2,7 @@
 @model RegisterViewModel
 
 @{
-	ViewData["Title"] = "Sign up";
+    ViewData["Title"] = "Sign up";
 }
 
 <div class="row">
@@ -20,13 +20,18 @@
 
         <div class="row">
             <div class="col-md-8">
-                <form asp-action="Register">
+                <form asp-action="Register" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     <div class="form-group">
                         <label asp-for="EmailAddress" class="control-label"></label>
                         <input asp-for="EmailAddress" class="form-control" />
                         <span asp-validation-for="EmailAddress" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Image" class="control-label">Выберите фотографию:</label>
+                        <input type="file" asp-for="Image" class="form-control" />
+                        <span asp-validation-for="Image" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Password" class="control-label"></label>
@@ -55,7 +60,17 @@
                         <input asp-for="AddressUser.City" class="form-control" placeholder="City">
                         <span asp-validation-for="AddressUser.City" class="text-danger"></span>
                     </div>
-                   
+                    <div class="form-group">
+                        <label asp-for="UserName">Ваше имя</label>
+                        <input asp-for="UserName" class="form-control" placeholder="UserName">
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PhoneNumber">Контактный номер телефона</label>
+                        <input asp-for="PhoneNumber" class="form-control" placeholder="PhoneNumber">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    </div>
+
                     <div class="form-group">
                         <input class="btn btn-outline-success float-right" type="submit" value="Sign up" />
                         <a class="btn btn-outline-secondary" asp-controller="Account" asp-action="Login">Cancel</a>

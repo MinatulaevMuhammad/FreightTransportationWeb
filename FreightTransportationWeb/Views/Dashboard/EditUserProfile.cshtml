@@ -3,6 +3,12 @@
 
 <form method="post" asp-action="EditUserProfile" enctype="multipart/form-data">
 	<input type="hidden" id="Id" name="Id" asp-for="Id" />
+	<img src="~/images/@Model.SaveImage" class="img-thumbnail" alt="User Photo" width="200" height="200">
+	<div class="form-group">
+		<label asp-for="Image" class="control-label">Выберите фотографию:</label>
+		<input type="file" asp-for="Image" class="form-control" />
+		<span asp-validation-for="Image" class="text-danger"></span>
+	</div>
 	<div class="form-group">
 		<label asp-for="UserName">UserName</label>
 		<input asp-for="UserName" class="form-control" placeholder="UserName" />

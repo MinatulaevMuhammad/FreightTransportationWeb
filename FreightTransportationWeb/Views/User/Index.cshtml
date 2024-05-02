@@ -9,24 +9,26 @@
                     <tbody>
                         @foreach (var user in Model)
                         {
-                            <tr class="bg-white">
-                                <th scope="row">
-                                    <div class="media align-items-center">
-                                        <div class="media-body">
-                                            <span class="h6 mb-0">@user.UserName</span>
+                            @if (user.Id != User.GetUserId())
+                            {
+                                <tr class="bg-white">
+                                    <th scope="row">
+                                        <div class="media align-items-center">
+                                            <div class="media-body">
+                                                <span class="h6 mb-0">@user.UserName</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </th>
-                                <td>
-                                    <a class="btn btn-outline-primary" asp-controller="User" asp-action="Detail" asp-route-id="@user.Id">
-                                        View Profile
-                                    </a>
-                                    <a class="btn btn-outline-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@user.Id">
-                                        Comments
-                                    </a>
-                                </td>
-                            </tr>
-                            
+                                    </th>
+                                    <td>
+                                        <a class="btn btn-outline-primary" asp-controller="User" asp-action="Detail" asp-route-id="@user.Id">
+                                            View Profile
+                                        </a>
+                                        <a class="btn btn-outline-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@user.Id">
+                                            Comments
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>

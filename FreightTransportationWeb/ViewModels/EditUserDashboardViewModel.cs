@@ -6,6 +6,8 @@ namespace FreightTransportationWeb.ViewModels
     {
         public string Id { get; set; }
         public string UserName { get; set; }
+        public IFormFile? Image {  get; set; }
+        public string? SaveImage { get; set; }
         public AddressUser AddressUser { get; set; }
     }
 }
