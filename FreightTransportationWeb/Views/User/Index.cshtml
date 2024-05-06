@@ -26,6 +26,28 @@
                                         <a class="btn btn-outline-primary" asp-controller="Comment" asp-action="Index" asp-route-id="@user.Id">
                                             Comments
                                         </a>
+                                        <a>
+                                            @for (int i = 0; i < (int) user.AverageRating; i++)
+                                            {
+                                                <span class="text-danger bi bi-star-fill"></span>
+                                            }
+                                            @if (user.AverageRating % 1 >= 0.5)
+                                            {
+                                                <span class="text-danger bi bi-star-half"></span>
+                                                @for (int i = (int) user.AverageRating; i < 5 - 1; i++)
+                                                {
+                                                    <span class="text-danger bi bi-star"></span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                @for (int i = (int)user.AverageRating; i < 5; i++)
+                                                {
+                                                    <span class="text-danger bi bi-star"></span>
+                                                }
+                                            }
+
+                                        </a>
                                     </td>
                                 </tr>
                             }

@@ -1,15 +1,19 @@
-﻿using FreightTransportationWeb.Interfaces;
+﻿using FreightTransportationWeb.Data;
+using FreightTransportationWeb.Interfaces;
 using FreightTransportationWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace FreightTransportationWeb.Controllers
 {
     public class UserController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly IUserRepository _userRepository;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(ApplicationDbContext context,IUserRepository userRepository)
         {
+            _context = context;
             _userRepository = userRepository;
         }
 
@@ -20,11 +24,20 @@ namespace FreightTransportationWeb.Controllers
             List<UserViewModel> result = new List<UserViewModel>();
             foreach (var user in users)
             {
+                var commentsUser = _context.Comments.Where(a => a.AppUserCommentId == user.Id).ToList();
+                double averageRating = 0;
+
+                if (commentsUser.Count != 0)
+                {
+                    averageRating = commentsUser.Sum(r => r.Rating) / (double)commentsUser.Count;
+                }
+
                 var userViewModel = new UserViewModel()
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    AddressUser = user.Address
+                    AddressUser = user.Address,
+                    AverageRating = averageRating
                 };
                 result.Add(userViewModel);
             }

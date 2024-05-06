@@ -4,6 +4,31 @@
 <head>
     <title>Детальное описание заказа</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://api-maps.yandex.ru/2.1/?apikey=76a3b6ef-dc46-4511-9e4b-32e70d543e7c&lang=ru-RU" type="text/javascript"></script>
+    <script type="text/javascript">
+        ymaps.ready(init);
+        var myMap;
+
+        function init() {
+            myMap = new ymaps.Map('map', {
+                center: [55.01109776262212, 82.94145228295886],
+                zoom: 15,
+                controls: ['routePanelControl']
+            });
+
+            let customerAddress = '@Html.Raw(Model.Customer.Address.City), @Html.Raw(Model.Customer.Address.Street), @Html.Raw(Model.Customer.Address.House)';
+            var deliveryAddress = '@Html.Raw(Model.DeliveryAddress.City), @Html.Raw(Model.DeliveryAddress.Street), @Html.Raw(Model.DeliveryAddress.House)';
+
+            let control = myMap.controls.get('routePanelControl');
+            control.routePanel.state.set({
+                type: 'masstransit',
+                fromEnabled: false,
+                from: `${customerAddress}`,
+                toEnabled: true,
+                to: `${deliveryAddress}`,
+            });
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -58,5 +83,6 @@
             </div>
         </div>
     </div>
+    <div id="map" style="width: 600px; height: 400px"></div>
 </body>
 </html>

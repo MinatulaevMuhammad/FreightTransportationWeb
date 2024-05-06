@@ -9,5 +9,6 @@ namespace FreightTransportationWeb.ViewModels
 		public string? Image { get; set; }
         public string? PhoneNumber { get; set; }
 		public AddressUser AddressUser { get; set; }
+        public double AverageRating { get; set; }
     }
 }
