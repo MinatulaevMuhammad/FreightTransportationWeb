@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FreightTransportationWeb.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240501082353_Indentity")]
-    partial class Indentity
+    [Migration("20240509071421_Identity")]
+    partial class Identity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,6 +123,29 @@ namespace FreightTransportationWeb.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FreightTransportationWeb.Models.Auction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContractorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Auctions");
+                });
+
             modelBuilder.Entity("FreightTransportationWeb.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -204,6 +227,9 @@ namespace FreightTransportationWeb.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("PackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

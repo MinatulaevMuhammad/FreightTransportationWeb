@@ -1,0 +1,34 @@
+﻿@model Order
+
+<form method="post" asp-action="SubmitApplication" enctype="multipart/form-data">
+    <input type="hidden" value="Id" id="Id" />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Информация о грузе</h2>
+                <div class="form-group">
+                    <label for="cargoDescription">Описание груза:</label>
+                    <p id="cargoDescription">@Model.Package.Description</p>
+                </div>
+                <div class="form-group">
+                    <label for="cargoWeight">Вес груза:</label>
+                    <p id="cargoWeight">@Model.Package.Weight</p>
+                </div>
+                <div class="form-group">
+                    <label for="cargoDimensions">Габариты груза:</label>
+                    <p id="cargoDimensions">@Model.Package.Length - @Model.Package.Width - @Model.Package.Height (длина-ширина-высота в см)</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="row">
+                <label asp-for="Price">Предлагаемая сумма оплаты(можете предложить свою цену)</label>
+                <input asp-for="Price" class="form-control" placeholder="Price" value="@Model.Price">
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Оставить заявку</button>
+</form>
+
+    

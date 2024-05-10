@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace FreightTransportationWeb.Migrations
 {
     /// <inheritdoc />
-    public partial class Indentity : Migration
+    public partial class Identity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -38,6 +38,21 @@ namespace FreightTransportationWeb.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Auctions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ContractorId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Auctions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -244,6 +259,7 @@ namespace FreightTransportationWeb.Migrations
                     ContractorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     DeliveryAddressId = table.Column<int>(type: "int", nullable: false),
                     PackageId = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
                     OrderStatus = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -360,6 +376,9 @@ namespace FreightTransportationWeb.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Auctions");
 
             migrationBuilder.DropTable(
                 name: "Comments");

@@ -7,6 +7,7 @@ namespace FreightTransportationWeb.Interfaces
     {
         Task<List<Order>> GetAllUserOrders();
         Task<List<Order>> GetAllContractorOrders();
+        Task<List<Order>> GetAllContractorAuctions();
         Task<AppUser> GetUserById(string id);
         Task<AppUser> GetUserByIdNoTracking(string id);
         bool Update(AppUser appUser);

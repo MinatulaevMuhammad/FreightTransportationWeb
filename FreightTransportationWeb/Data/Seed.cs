@@ -23,14 +23,14 @@ namespace FreightTransportationWeb.Data
 
                 //Users
                 var userManager = serviceScope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
-                string adminUserEmail = "teddysmithdeveloper@gmail.com";
+                string adminUserEmail = "admin@gmail.com";
 
                 var adminUser = await userManager.FindByEmailAsync(adminUserEmail);
                 if (adminUser == null)
                 {
                     var newAdminUser = new AppUser()
                     {
-                        UserName = "teddysmithdev",
+                        UserName = "admin",
                         Email = adminUserEmail,
                         EmailConfirmed = true,
                         Address = new AddressUser()
@@ -41,7 +41,7 @@ namespace FreightTransportationWeb.Data
                             
                         }
                     };
-                    await userManager.CreateAsync(newAdminUser, "Coding@1234?");
+                    await userManager.CreateAsync(newAdminUser, "Coding@1234");
                     await userManager.AddToRoleAsync(newAdminUser, UserRoles.Admin);
                 }
 
@@ -52,7 +52,7 @@ namespace FreightTransportationWeb.Data
                 {
                     var newAppUser = new AppUser()
                     {
-                        UserName = "app-user",
+                        UserName = "User",
                         Email = appUserEmail,
                         EmailConfirmed = true,
                         Address = new AddressUser()
@@ -63,7 +63,7 @@ namespace FreightTransportationWeb.Data
                             
                         }
                     };
-                    await userManager.CreateAsync(newAppUser, "Coding@1234?");
+                    await userManager.CreateAsync(newAppUser, "Coding@1234");
                     await userManager.AddToRoleAsync(newAppUser, UserRoles.User);
                 }
             }

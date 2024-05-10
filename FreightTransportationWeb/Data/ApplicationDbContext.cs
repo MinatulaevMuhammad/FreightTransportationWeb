@@ -17,5 +17,6 @@ namespace FreightTransportationWeb.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Package> Packages { get; set; }
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Auction> Auctions { get; set; }
     }
 }

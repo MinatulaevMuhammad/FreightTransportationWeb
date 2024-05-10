@@ -10,12 +10,14 @@ namespace FreightTransportationWeb.Controllers
 {
     public class OrderController : Controller
     {
+        private readonly ApplicationDbContext _context;
         private readonly IOrderRepository _orderRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserRepository _userRepository;
 
-        public OrderController(IOrderRepository orderRepository, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
+        public OrderController(ApplicationDbContext context, IOrderRepository orderRepository, IHttpContextAccessor httpContextAccessor, IUserRepository userRepository)
         {
+            _context = context;
             _orderRepository = orderRepository;
             _httpContextAccessor = httpContextAccessor;
             _userRepository = userRepository;
@@ -61,6 +63,7 @@ namespace FreightTransportationWeb.Controllers
                         Height = orderVM.Package.Height,
                         Description = orderVM.Package.Description,
                     },
+                    Price = orderVM.Price,
                     OrderStatus = OrderStatus.Created
                 };
                 _orderRepository.Add(order);
@@ -87,6 +90,7 @@ namespace FreightTransportationWeb.Controllers
                 DeliveryAddress = order.DeliveryAddress,
                 PackageId = order.PackageId,
                 Package = order.Package,
+                Price = order.Price,
                 OrderStatus = order.OrderStatus
             };
             return View(orderEdit);
@@ -106,6 +110,7 @@ namespace FreightTransportationWeb.Controllers
                     DeliveryAddress = orderEdit.DeliveryAddress,
                     PackageId = orderEdit.PackageId,
                     Package = orderEdit.Package,
+                    Price = orderVM.Price,
                     OrderStatus = orderEdit.OrderStatus
                 };
 
@@ -150,17 +155,80 @@ namespace FreightTransportationWeb.Controllers
 		}
 
         [HttpGet]
-        public async Task<IActionResult> AcceptOrder(int id)
+        public async Task<IActionResult> SubmitApplication(int id)
+        {
+            var curUserId = _httpContextAccessor.HttpContext.User.GetUserId();
+            if (_context.Auctions.FirstOrDefault(a => a.OrderId == id && a.ContractorId == _httpContextAccessor.HttpContext.User.GetUserId()) != null) 
+            {
+                TempData["ErrorMessage"] = "Ошибка: Вы уже оставили заявку на данный заказ.";
+                return RedirectToAction("Index"); // Перенаправление на страниц
+            }
+            Order order = await _orderRepository.GetByIdAsync(id);
+            return View(order);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitApplication(int id, int Price)
         {
             Order order = await _orderRepository.GetByIdAsync(id);
-            var userId =  _httpContextAccessor.HttpContext.User.GetUserId();
-            var user = await _userRepository.GetUserById(userId);
-            if (order == null || userId == null || user == null) return View("Error");
+            Auction auction = new Auction
+            {
+                OrderId = id,
+                Price = Price,
+                ContractorId = _httpContextAccessor.HttpContext.User.GetUserId()
+            };
 
-            order.ContractorId = userId;
-            order.OrderStatus = OrderStatus.InProgress;
-            _orderRepository.Update(order);
+            _context.Add(auction);
+            _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewApplications(int id)
+        {
+            List <AuctionViewModel> applicationsInfo = new List<AuctionViewModel>();
+            var applications = await _context.Auctions.Where(c => c.OrderId == id).ToListAsync();
+
+            foreach(var app in applications)
+            {
+                var contractor = await _userRepository.GetUserById(app.ContractorId);
+
+                var commentsUser = _context.Comments.Where(a => a.AppUserCommentId == app.ContractorId).ToList();
+                double averageRating = 0;
+                if (commentsUser.Count != 0) averageRating = commentsUser.Sum(r => r.Rating) / (double)commentsUser.Count;
+                var applicationInfo = new AuctionViewModel
+                {
+                    Id = app.Id,
+                    AverageRating = averageRating,
+                    Price = app.Price,
+                    Contractor = contractor
+                };
+                applicationsInfo.Add(applicationInfo);
+            }
+
+            return View(applicationsInfo);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChoosContractor(int id)
+        {
+            var application = _context.Auctions.FirstOrDefault(c => c.Id == id);
+
+            Order order = await _orderRepository.GetByIdAsync(application.OrderId);
+
+            order.ContractorId = application.ContractorId;
+            order.OrderStatus = OrderStatus.InProgress;
+            order.Price = application.Price;
+            _orderRepository.Update(order);
+
+            var applications = _context.Auctions.Where(a => a.OrderId == order.Id).ToList();
+            foreach(var app in applications)
+            {
+                _context.Auctions.Remove(app);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index","Dashboard");
         }
         [HttpGet]
         public async Task<IActionResult> Complete(int id)

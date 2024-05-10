@@ -5,6 +5,7 @@ using FreightTransportationWeb.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace FreightTransportationWeb.Controllers
 {
@@ -24,11 +25,14 @@ namespace FreightTransportationWeb.Controllers
         {
             if (editVM.Image != null)
             {
-                string oldPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", appUser.Image);
-
-                if (System.IO.File.Exists(oldPhotoPath))
+                if(appUser.Image != null)
                 {
-                    System.IO.File.Delete(oldPhotoPath);
+                    string oldPhotoPath = Path.Combine(_webHostEnvironment.WebRootPath, "images", appUser.Image);
+
+                    if (System.IO.File.Exists(oldPhotoPath))
+                    {
+                        System.IO.File.Delete(oldPhotoPath);
+                    }
                 }
 
                 string newUniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(editVM.Image.FileName);
@@ -42,6 +46,8 @@ namespace FreightTransportationWeb.Controllers
             }
             appUser.Id = editVM.Id;
             appUser.Address = editVM.AddressUser;
+            appUser.UserName = editVM.UserName;
+            appUser.PhoneNumber = editVM.PhoneNumber;
         }
         public async Task<IActionResult> Index()
         {
@@ -67,7 +73,8 @@ namespace FreightTransportationWeb.Controllers
                 Id = curUserId,
                 UserName = user.UserName,
                 AddressUser = user.Address,
-                SaveImage = user.Image
+                SaveImage = user.Image,
+                PhoneNumber = user.PhoneNumber
             };
             return View(editUserViewModel);
         }
@@ -99,9 +106,11 @@ namespace FreightTransportationWeb.Controllers
         public async Task<IActionResult> AcceptedOrders()
         {
             var contractorOrders = await _dashboardRepository.GetAllContractorOrders();
+            var contractorAunctions = await _dashboardRepository.GetAllContractorAuctions();
             var userViewModel = new DashboardViewModel()
             {
-                Orders = contractorOrders
+                Orders = contractorOrders,
+                Auctions = contractorAunctions
             };
             return View(userViewModel);
         }

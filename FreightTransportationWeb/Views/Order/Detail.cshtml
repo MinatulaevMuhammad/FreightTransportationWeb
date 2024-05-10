@@ -27,6 +27,11 @@
                 toEnabled: true,
                 to: `${deliveryAddress}`,
             });
+            control.routePanel.options.set({
+                types: {
+                    auto:true
+                }
+            })
         }
     </script>
 </head>
@@ -80,6 +85,16 @@
                     <label for="cargoDimensions">Габариты груза:</label>
                     <p id="cargoDimensions">@Model.Package.Length - @Model.Package.Width - @Model.Package.Height (длина-ширина-высота в см)</p>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <h2>Предлагаемая плата за доставку</h2>
+                <div class="form-group">
+                    <label for="cargoDescription">Предлагаемая плата за доставку:</label>
+                    <p id="cargoDescription">@Model.Price</p>
+                </div>
+                
             </div>
         </div>
     </div>

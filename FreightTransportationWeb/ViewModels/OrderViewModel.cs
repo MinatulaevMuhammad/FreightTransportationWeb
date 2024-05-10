@@ -15,6 +15,7 @@ namespace FreightTransportationWeb.ViewModels
         public DeliveryAddress DeliveryAddress { get; set; }
         public int PackageId { get; set; }
         public Package Package { get; set; }
+        public int Price {  get; set; }
         public OrderStatus OrderStatus { get; set; }
     }
 }

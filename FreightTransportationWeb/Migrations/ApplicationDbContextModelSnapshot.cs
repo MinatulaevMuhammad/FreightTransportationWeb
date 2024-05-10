@@ -120,6 +120,29 @@ namespace FreightTransportationWeb.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("FreightTransportationWeb.Models.Auction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ContractorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Auctions");
+                });
+
             modelBuilder.Entity("FreightTransportationWeb.Models.Comment", b =>
                 {
                     b.Property<int>("Id")
@@ -201,6 +224,9 @@ namespace FreightTransportationWeb.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("PackageId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -28,6 +28,18 @@ namespace FreightTransportationWeb.Repository
             var userOrders = _context.Orders.Where(i => i.Contractor.Id == curUser).Include(p => p.Package);
             return userOrders.ToList();
         }
+        public async Task<List<Order>> GetAllContractorAuctions()
+        {
+            List<Order> orders = new List<Order>();
+            var curUser = _httpContextAccessor.HttpContext?.User.GetUserId();
+            var userAuctions = _context.Auctions.Where(i => i.ContractorId == curUser).ToList();
+            foreach(var item in userAuctions)
+            {
+                var order = _context.Orders.FirstOrDefault(a => a.Id == item.OrderId);
+                orders.Add(order);
+            }
+            return orders;
+        }
         public async Task<AppUser> GetUserById(string id)
         {
             return await _context.Users.Include(a => a.Address)
